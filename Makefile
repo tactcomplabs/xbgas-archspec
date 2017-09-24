@@ -1,4 +1,4 @@
-PAPER = rv128-arch-spec
+PAPER = xbgas-arch-spec
 TEX = $(wildcard *.tex)
 BIB = $(PAPER).bib
 FIGS = $(wildcard figures/*.pdf figures/*.png figures/*.jpg ./*.jpg)
