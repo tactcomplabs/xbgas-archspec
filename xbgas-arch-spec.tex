@@ -851,7 +851,8 @@ esd rs1, imm(rs2) & rs1 & rs2+ext2 & 011 & 0111110\\
 \hline
 esw rs1, imm(rs2) & rs1 & rs2+ext2 & 010 & 0111110\\
 \hline
-esh rs1, imm(rs2) & rs1 & rs2+ext2 & 001 & 0111110\\\hline
+esh rs1, imm(rs2) & rs1 & rs2+ext2 & 001 & 0111110\\
+\hline
 esb rs1, imm(rs2) & rs1 & rs2+ext2 & 000 & 0111110\\
 \hline
 \end{tabular}
@@ -948,11 +949,11 @@ erse ext1, rs2, ext3 & 0001000 &  rs2 & ext1 & 011 & rs1 & 0111111\\
 \hline
 Mnemonic & base & funct3 & dest & opcode \\ \hline
 \hline
-eaddi rd, ext1, imm & ext1 & 001 & rd & 1111111\\
+eaddi rd, ext1, imm & ext1 & 010 & rd & 1111111\\
 \hline
-eaddie extd, rs1, imm & rs1 &100 & extd & 1111111\\
+eaddie extd, rs1, imm & rs1 &011 & extd & 1111111\\
 \hline
-eaddix extd, ext1, imm & extd & 101 & ext1 & 1111111\\
+eaddix extd, ext1, imm & extd & 110 & ext1 & 1111111\\
 \hline
 \end{tabular}
 \end{center}

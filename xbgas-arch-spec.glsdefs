@@ -1,0 +1,60 @@
+\ifglsentryexists{ExtTrans}{}%
+{%
+\gls@defglossaryentry{ExtTrans}%
+{%
+name={extended translation},%
+sort={extended translation},%
+type={main},%
+first={extended translation},%
+firstplural={extended translations},%
+text={extended translation},%
+plural={extended translations},%
+description={Extended translation is the process of converting the most significant 64 bits, or \textit {extended}, portion of an xBGAS address to the respective system architecture's machine descriptor},%
+descriptionplural={Extended translation is the process of converting the most significant 64 bits, or \textit {extended}, portion of an xBGAS address to the respective system architecture's machine descriptor},%
+symbol={\relax },%
+symbolplural={\relax },%
+user1={},%
+user2={},%
+user3={},%
+user4={},%
+user5={},%
+user6={},%
+long={},%
+longplural={},%
+short={},%
+shortplural={},%
+counter={page},%
+parent={},%
+%
+}%
+}%
+\ifglsentryexists{xBGAS}{}%
+{%
+\gls@defglossaryentry{xBGAS}%
+{%
+name={xBGAS},%
+sort={xBGAS},%
+type={main},%
+first={Extended Base Global Address Space\glsspace (xBGAS)},%
+firstplural={Extended Base Global Address Spaces\glsspace (xBGASs)},%
+text={xBGAS},%
+plural={xBGASs},%
+description={Extended Base Global Address Space},%
+descriptionplural={Extended Base Global Address Space\acrpluralsuffix },%
+symbol={\relax },%
+symbolplural={\relax },%
+user1={},%
+user2={},%
+user3={},%
+user4={},%
+user5={},%
+user6={},%
+long={Extended Base Global Address Space},%
+longplural={Extended Base Global Address Spaces},%
+short={xBGAS},%
+shortplural={xBGASs},%
+counter={page},%
+parent={},%
+%
+}%
+}%
