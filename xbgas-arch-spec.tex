@@ -824,17 +824,17 @@ There are currently no supervisor instructions defined in the xBGAS extension.
 \hline
 Mnemonic & base & funct3 & dest & opcode \\ \hline
 \hline
-eld rd, imm(rs1) & rs1+ext1 & 011 & rd & 0111111\\
+eld rd, imm(rs1) & rs1+ext1 & 011 & rd & 1110111\\
 \hline
-elw rd, imm(rs1) & rs1+ext1 & 010 & rd & 0111111\\
+elw rd, imm(rs1) & rs1+ext1 & 010 & rd & 1110111\\
 \hline
-elh rd, imm(rs1) & rs1+ext1 & 001 & rd & 0111111\\
+elh rd, imm(rs1) & rs1+ext1 & 001 & rd & 1110111\\
 \hline
-elhu rd, imm(rs1) & rs1+ext1 & 101 & rd & 0111111\\
+elhu rd, imm(rs1) & rs1+ext1 & 101 & rd & 1110111\\
 \hline
-elb rd, imm(rs1) & rs1+ext1 & 000 & rd & 0111111\\
+elb rd, imm(rs1) & rs1+ext1 & 000 & rd & 1110111\\
 \hline
-elbu rd, imm(rs1) & rs1+ext1 & 100 & rd & 0111111\\
+elbu rd, imm(rs1) & rs1+ext1 & 100 & rd & 1110111\\
 \hline
 \end{tabular}
 \end{center}
@@ -866,9 +866,9 @@ esb rs1, imm(rs2) & rs1 & rs2+ext2 & 000 & 1111011\\
 \hline
 Mnemonic & base & funct3 & dest & opcode \\ \hline
 \hline
-elq rd, imm(rs1) & rs1+ext1 & 110 & rd & 1111011\\
+elq rd, imm(rs1) & rs1+ext1 & 110 & rd & 1110111\\
 \hline
-ele extd, imm(rs1) & rs1+ext1 & 111 & rd & 1111011\\
+ele extd, imm(rs1) & rs1+ext1 & 111 & rd & 1110111\\
 \hline
 \end{tabular}
 \end{center}
@@ -881,9 +881,9 @@ ele extd, imm(rs1) & rs1+ext1 & 111 & rd & 1111011\\
 \hline
 Mnemonic & src & base & funct3 & opcode \\ \hline
 \hline
-esq rs1, imm(rs2) & rs1 & rs2+ext2 & 100 & 1111111\\
+esq rs1, imm(rs2) & rs1 & rs2+ext2 & 100 & 1111011\\
 \hline
-ese ext1, imm(rs2) & ext1 & rs2+ext2 & 101 & 1111111\\
+ese ext1, imm(rs2) & ext1 & rs2+ext2 & 101 & 1111011\\
 \hline
 \end{tabular}
 \end{center}
@@ -905,29 +905,29 @@ ese ext1, imm(rs2) & ext1 & rs2+ext2 & 101 & 1111111\\
 \hline
 Mnemonic & funct7 & rs2 & rs1 & funct3 & rd & opcode \\ \hline
 \hline
-erld rd, rs1, ext2 & 0000010 & ext2 & rs1 & 011 & rd & 0111111\\
+erld rd, rs1, ext2 & 0000010 & ext2 & rs1 & 011 & rd & 1101111\\
 \hline
-erlw rd, rs1, ext2 & 0000010 & ext2 & rs1 & 010 & rd & 0111111\\
+erlw rd, rs1, ext2 & 0000010 & ext2 & rs1 & 010 & rd & 1101111\\
 \hline
-erlh rd, rs1, ext2 & 0000010 & ext2 & rs1 & 001 & rd & 0111111\\
+erlh rd, rs1, ext2 & 0000010 & ext2 & rs1 & 001 & rd & 1101111\\
 \hline
-erlhu rd, rs1, ext2 & 0000010 & ext2 & rs1 & 101 & rd & 0111111\\
+erlhu rd, rs1, ext2 & 0000010 & ext2 & rs1 & 101 & rd & 1101111\\
 \hline
-erlb rd, rs1, ext2 & 0000010 & ext2 & rs1 & 000 & rd & 0111111\\
+erlb rd, rs1, ext2 & 0000010 & ext2 & rs1 & 000 & rd & 1101111\\
 \hline
-erlbu rd, rs1, ext2 & 0000010 & ext2 & rs1 & 100 & rd & 0111111\\
+erlbu rd, rs1, ext2 & 0000010 & ext2 & rs1 & 100 & rd & 1101111\\
 \hline
-erle extd, rs1, ext2 & 0000011 & ext2 & rs1 & 100 & extd & 0111111\\
+erle extd, rs1, ext2 & 0000011 & ext2 & rs1 & 100 & extd & 1101111\\
 \hline
-ersd rs1, rs2, ext3 & 0000100 &  rs2 & rs1 & 011 & rs1 & 0111111\\
+ersd rs1, rs2, ext3 & 0000100 &  rs2 & rs1 & 011 & rs1 & 1101111\\
 \hline
-ersw rs1, rs2, ext3 & 0000100 &  rs2 & rs1 & 010 & rs1 & 0111111\\
+ersw rs1, rs2, ext3 & 0000100 &  rs2 & rs1 & 010 & rs1 & 1101111\\
 \hline
-ersh rs1, rs2, ext3 & 0000100 &  rs2 & rs1 & 001 & rs1 & 0111111\\
+ersh rs1, rs2, ext3 & 0000100 &  rs2 & rs1 & 001 & rs1 & 1101111\\
 \hline
-ersb rs1, rs2, ext3 & 0000100 &  rs2 & rs1 & 000 & rs1 & 0111111\\
+ersb rs1, rs2, ext3 & 0000100 &  rs2 & rs1 & 000 & rs1 & 1101111\\
 \hline
-erse ext1, rs2, ext3 & 0001000 &  rs2 & ext1 & 011 & rs1 & 0111111\\
+erse ext1, rs2, ext3 & 0001000 &  rs2 & ext1 & 011 & rs1 & 1101111\\
 \hline
 \end{tabular}
 \end{center}
@@ -949,11 +949,11 @@ erse ext1, rs2, ext3 & 0001000 &  rs2 & ext1 & 011 & rs1 & 0111111\\
 \hline
 Mnemonic & base & funct3 & dest & opcode \\ \hline
 \hline
-eaddi rd, ext1, imm & ext1 & 010 & rd & 1111111\\
+eaddi rd, ext1, imm & ext1 & 010 & rd & 1001111\\
 \hline
-eaddie extd, rs1, imm & rs1 &011 & extd & 1111111\\
+eaddie extd, rs1, imm & rs1 &011 & extd & 1001111\\
 \hline
-eaddix extd, ext1, imm & extd & 110 & ext1 & 1111111\\
+eaddix extd, ext1, imm & extd & 110 & ext1 & 1001111\\
 \hline
 \end{tabular}
 \end{center}
