@@ -905,29 +905,29 @@ ese ext1, imm(rs2) & ext1 & rs2+ext2 & 101 & 1111011\\
 \hline
 Mnemonic & funct7 & rs2 & rs1 & funct3 & rd & opcode \\ \hline
 \hline
-erld rd, rs1, ext2 & 0000010 & ext2 & rs1 & 011 & rd & 1101111\\
+erld rd, rs1, ext2 & 1010101 & ext2 & rs1 & 011 & rd & 0110011\\
 \hline
-erlw rd, rs1, ext2 & 0000010 & ext2 & rs1 & 010 & rd & 1101111\\
+erlw rd, rs1, ext2 & 1010101 & ext2 & rs1 & 010 & rd & 0110011\\
 \hline
-erlh rd, rs1, ext2 & 0000010 & ext2 & rs1 & 001 & rd & 1101111\\
+erlh rd, rs1, ext2 & 1010101 & ext2 & rs1 & 001 & rd & 0110011\\
 \hline
-erlhu rd, rs1, ext2 & 0000010 & ext2 & rs1 & 101 & rd & 1101111\\
+erlhu rd, rs1, ext2 & 1010101 & ext2 & rs1 & 101 & rd & 0110011\\
 \hline
-erlb rd, rs1, ext2 & 0000010 & ext2 & rs1 & 000 & rd & 1101111\\
+erlb rd, rs1, ext2 & 1010101 & ext2 & rs1 & 000 & rd & 0110011\\
 \hline
-erlbu rd, rs1, ext2 & 0000010 & ext2 & rs1 & 100 & rd & 1101111\\
+erlbu rd, rs1, ext2 & 1010101 & ext2 & rs1 & 100 & rd & 0110011\\
 \hline
-erle extd, rs1, ext2 & 0000011 & ext2 & rs1 & 100 & extd & 1101111\\
+erle extd, rs1, ext2 & 0100001 & ext2 & rs1 & 100 & extd & 0110011\\
 \hline
-ersd rs1, rs2, ext3 & 0000100 &  rs2 & rs1 & 011 & rs1 & 1101111\\
+ersd rs1, rs2, ext3 & 0100010 &  rs2 & rs1 & 011 & rs1 & 0110011\\
 \hline
-ersw rs1, rs2, ext3 & 0000100 &  rs2 & rs1 & 010 & rs1 & 1101111\\
+ersw rs1, rs2, ext3 & 0100010 &  rs2 & rs1 & 010 & rs1 & 0110011\\
 \hline
-ersh rs1, rs2, ext3 & 0000100 &  rs2 & rs1 & 001 & rs1 & 1101111\\
+ersh rs1, rs2, ext3 & 0100010 &  rs2 & rs1 & 001 & rs1 & 0110011\\
 \hline
-ersb rs1, rs2, ext3 & 0000100 &  rs2 & rs1 & 000 & rs1 & 1101111\\
+ersb rs1, rs2, ext3 & 0100010 &  rs2 & rs1 & 000 & rs1 & 0110011\\
 \hline
-erse ext1, rs2, ext3 & 0001000 &  rs2 & ext1 & 011 & rs1 & 1101111\\
+erse ext1, rs2, ext3 & 0100011 &  rs2 & ext1 & 011 & rs1 & 0110011\\
 \hline
 \end{tabular}
 \end{center}
@@ -949,11 +949,11 @@ erse ext1, rs2, ext3 & 0001000 &  rs2 & ext1 & 011 & rs1 & 1101111\\
 \hline
 Mnemonic & base & funct3 & dest & opcode \\ \hline
 \hline
-eaddi rd, ext1, imm & ext1 & 010 & rd & 1001111\\
+eaddi rd, ext1, imm & ext1 & 110 & rd & 1111011\\
 \hline
-eaddie extd, rs1, imm & rs1 &011 & extd & 1001111\\
+eaddie extd, rs1, imm & rs1 &111 & extd & 1111011\\
 \hline
-eaddix extd, ext1, imm & extd & 110 & ext1 & 1001111\\
+eaddix extd, ext1, imm & extd & 111 & ext1 & 0000011\\
 \hline
 \end{tabular}
 \end{center}
