@@ -133,27 +133,27 @@ Further, they do not explicitly modify the incumbent RV32I or RV64I memory acces
 methodologies.  Rather, these additions are extensions to the base level specifications in order to 
 permit normal, byte-aligned memory access to address spaces larger than 64-bits.  In 
 this manner, users may build and execute applications that support RV32I and RV64I 
-instructions without utilizing the xBGAS extensions without issue.  Further, RV32I and RV64I 
+instructions without utilizing the SV-xBGAS extensions without issue.  Further, RV32I and RV64I 
 applications that are binary compatible should execute unencumbered on a system that 
-complies with the xBGAS extensions described herein.
+complies with the SV-xBGAS extensions described herein.
 
 \subsection{SV-xBGAS Extension ISA Requirements}
 
-The xBGAS instruction set extension described herein is classified 
+The SV-xBGAS instruction set extension described herein is classified 
 as a \textit{brownfield} extension with respect to the core RISC-V 
 machine state.  In this manner, fits within the existing RISC-V instruction 
-formats and encodings.  However, the xBGAS extension does instantiate 
+formats and encodings.  However, the SV-xBGAS extension does instantiate 
 additional machine state in terms of user-visible and supervisor registers.
 
-The xBGAS specification functions an extension to the existing RV64I~\cite{RVSpec} 
+The SV-xBGAS specification functions an extension to the existing RV64I~\cite{RVSpec} 
 base instruction set specification (and all inherited instructions therein).  In this 
-manner, the xBGAS extension is truly an extension, rather than a full expansion 
+manner, the SV-xBGAS extension is truly an extension, rather than a full expansion 
 of the register \textit{XLEN} and the associated ALU.
 
 \subsection{SV-xBGAS Implementation Requirements}
 
 The goal of this specification is to outline the required encoding, register extensions 
-and associated supervisor level functionality required to implement the xBGAS 
+and associated supervisor level functionality required to implement the SV-xBGAS 
 RISC-V extension.  It does not, however, imply any specific required implementation 
 functionality unless otherwise noted herein.  Specific topics that are deliberately 
 left up to the implementor can be summarized as follows:
@@ -185,17 +185,17 @@ specific memory bus or memory interconnection infrastructure.  It is up to the i
 how the memory units are connected to the target memory device or devices.
 
 \item \textbf{Pipeline Model}: This specification does not mention, nor require any specific 
-core pipeline model.  It is up to the implementor to define how the xBGAS instructions are 
+core pipeline model.  It is up to the implementor to define how the SV-xBGAS instructions are 
 implemented.
 
 \item \textbf{Virtualization}: This specification makes no mention of implementing a virtualization 
-layer on top of xBGAS-style addressing.  Do not expect that xBGAS addressing modes will 
+layer on top of SV-xBGAS-style addressing.  Do not expect that SV-xBGAS addressing modes will 
 automatically function with pre-defined RV64I virtualization mechanisms.  This is beyond the 
 scope of this document.
 
 \item \textbf{Enclaves}: This specification makes no mention of implementating functionality 
 associated with system or machine-level security enclaves.  Any security-related functionality 
-required to enforce enclaves on a system with xBGAS extensions is beyond the scope 
+required to enforce enclaves on a system with SV-xBGAS extensions is beyond the scope 
 of this document.
 
 \end{itemize}
@@ -208,8 +208,8 @@ As noted by the supervisor specification~\cite{RVSuperSpec}, the
 \textit{misa} CSR register is an XLEN-bit \warl\ read-write register reporting 
 the supported ISA by the hart.  Normally, the MXL (Machine XLEN) field 
 encodes the native base integer width as shown in the supervisor specification.  
-In the case of xBGAS, this value is set to represent a 64-bit base ISA (\textit{MXL=2}).  We do 
-not override this value as the xBGAS implementation described herein does not 
+In the case of SV-xBGAS, this value is set to represent a 64-bit base ISA (\textit{MXL=2}).  We do 
+not override this value as the SV-xBGAS implementation described herein does not 
 natively modify the register width of the general purpose registers beyond 64-bits.    
 
 \begin{figure*}[h!]
@@ -235,11 +235,11 @@ natively modify the register width of the general purpose registers beyond 64-bi
 
 As stated in the supervisor specification, the \textbf{Extensions} field encodes the presence of the 
 standard extensions via a single bit per letter of the alphabet.  Per this notional encoding, 
-the ``I'' bit (bit-8) must be set for all implementations that support xBGAS.  Further, we also dictate 
+the ``I'' bit (bit-8) must be set for all implementations that support SV-xBGAS.  Further, we also dictate 
 that the ``X'' bit (bit-23) must be set to indicate a non-standard extension.
 
 \begin{commentary}
-Given that xBGAS is currently a non-standard extension, the ``X'' bit must be set.  However, 
+Given that SV-xBGAS is currently a non-standard extension, the ``X'' bit must be set.  However, 
 portions of this specification may be integrated into the official SV128 specification 
 that will become an officially supported extension.
 \end{commentary}
@@ -247,9 +247,9 @@ that will become an officially supported extension.
 \subsubsection{Supervisor Cause Register ({\tt scause})}
 
 Per the supervisor specification, the {\tt scause} register is an XLEN-bit read-write register 
-formatted as per Figure~\ref{scausereg}.  The xBGAS specification does not add any specific 
+formatted as per Figure~\ref{scausereg}.  The SV-xBGAS specification does not add any specific 
 Exception Code values to be placed in the \wlrl\ field.  However, much in the manner of 
-normal load and store operations from RV32I and RV64I, the xBGAS extension has the ability 
+normal load and store operations from RV32I and RV64I, the SV-xBGAS extension has the ability 
 trigger the codes listed in Table~\ref{scauses}.   
 
 \begin{figure*}[h!]
@@ -287,7 +287,7 @@ trigger the codes listed in Table~\ref{scauses}.
   \hline
 \end{tabular}
 \end{center}
-\caption{xBGAS Supervisor cause register ({\tt scause}) values after trap.}
+\caption{SV-xBGAS Supervisor cause register ({\tt scause}) values after trap.}
 \label{scauses}
 \end{table*}
 
@@ -299,8 +299,8 @@ trigger the codes listed in Table~\ref{scauses}.
 
 \subsection{SV-xBGAS Extended Addressing Logic}
 
-At the core of the xBGAS implementation is the ability to utilize existing RV64I 
-binary blobs without issue.  In this manner, the xBGAS extension makes use 
+At the core of the SV-xBGAS implementation is the ability to utilize existing RV64I 
+binary blobs without issue.  In this manner, the SV-xBGAS extension makes use 
 of the base RV64I register length, memory operations and ALU functionality.  
 They key portions of the xBGAS functionality and associated address mode 
 is implemented via an extended register file that is mapped to a series 
