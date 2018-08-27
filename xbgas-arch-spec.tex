@@ -47,10 +47,10 @@
 
 \pagestyle{fancy}
 \lhead{}
-\chead{\textbf{xBGAS Architecture Extension Specification}}  % -- classification
+\chead{\textbf{SV-xBGAS Architecture Extension Specification}}  % -- classification
 \rhead{}
 \cfoot{} %-- format: TR YYYY-RRR-V.V; y = year; r = report; v = version
-\lfoot{\textbf{xBGAS 0.0.6}}  % -- classification
+\lfoot{\textbf{SV-xBGAS 2.0.0}}  % -- classification
 \rfoot{\thepage}      % -- page number
 
 %\usepackage{times} % Uncomment to use the Times New Roman font
@@ -59,7 +59,7 @@
 %	DOCUMENT INFORMATION
 %----------------------------------------------------------------------------------------
 
-\title{\textbf{RISC-V Extended Addressing\\Architecture Extension Specification\\Codenamed: xBGAS}} % Title
+\title{\textbf{RISC-V Extended Addressing\\Architecture Extension Specification\\Codenamed: SV-xBGAS}} % Title
 
 %\author{John \textsc{Leidel}, David \textsc{Donofrio}, Farzad \textsc{Fatollahi-Fard}}
 \date{} % Date for the report
@@ -80,11 +80,12 @@
 \begin{center}
 \begin{tabular}{l r}
 Date: & \today \\
-Version: & 0.0.6 \\ % Date the experiment was performed
+Version: & 2.0.0 \\ % Date the experiment was performed
 Authors: & John Leidel\\
 & David Donofrio\\
 & Farzad Fatollahi-Fard\\
-& Xi Wang
+& Xi Wang\\
+& Steven Wallach
 \end{tabular}
 \end{center}
 
@@ -118,9 +119,9 @@ Authors: & John Leidel\\
 \clearpage
 \section{Introduction}
 
-\subsection{xBGAS Overview}
+\subsection{SV-xBGAS Overview}
 
-The goal of the \gls{xBGAS} extension described herein is to provided \textit{extended} 
+The goal of the \gls{xBGAS} SV extension described herein is to provide \textit{extended} 
 addressing capabilities beyond the core 64-bit addressing modes available in the 
 base RISC-V RV64I instruction set specification.  These extensions provide up 
 to 128 bits of virtual or physical address space (depending upon the target implementation) 
@@ -136,7 +137,7 @@ instructions without utilizing the xBGAS extensions without issue.  Further, RV3
 applications that are binary compatible should execute unencumbered on a system that 
 complies with the xBGAS extensions described herein.
 
-\subsection{xBGAS Extension ISA Requirements}
+\subsection{SV-xBGAS Extension ISA Requirements}
 
 The xBGAS instruction set extension described herein is classified 
 as a \textit{brownfield} extension with respect to the core RISC-V 
@@ -149,7 +150,7 @@ base instruction set specification (and all inherited instructions therein).  In
 manner, the xBGAS extension is truly an extension, rather than a full expansion 
 of the register \textit{XLEN} and the associated ALU.
 
-\subsection{xBGAS Implementation Requirements}
+\subsection{SV-xBGAS Implementation Requirements}
 
 The goal of this specification is to outline the required encoding, register extensions 
 and associated supervisor level functionality required to implement the xBGAS 
@@ -199,7 +200,7 @@ of this document.
 
 \end{itemize}
 
-\subsection{xBGAS Supervisor Specification Requirements}
+\subsection{SV-xBGAS Supervisor Specification Requirements}
 
 \subsubsection{Machine ISA Register {\tt misa}}
 
@@ -294,9 +295,9 @@ trigger the codes listed in Table~\ref{scauses}.
 %	SECTION 2
 %----------------------------------------------------------------------------------------
 \clearpage
-\section{xBGAS Machine Organization}
+\section{SV-xBGAS Machine Organization}
 
-\subsection{xBGAS Extended Addressing Logic}
+\subsection{SV-xBGAS Extended Addressing Logic}
 
 At the core of the xBGAS implementation is the ability to utilize existing RV64I 
 binary blobs without issue.  In this manner, the xBGAS extension makes use 
@@ -347,7 +348,7 @@ xBGAS address.  In addition to the base register, the instruction also utilizes 
 extended register, \textit{e21}, for the most significant 64 bits of the effective address.  Finally, we utilize the immediate 
 value in the instruction payload for any potential offset calculations.
 
-\subsection{xBGAS Register State}
+\subsection{SV-xBGAS Register State}
 In addition to the registers defined as a part of the base RISC-V IMAFD ISA, we define an additional set of registers for the xBGAS extension.  The register extension is defined in terms of User-Visible, Supervisor and Machine-State registers.  User-Visible registers are those that can be read and written from normal user instructions.  Supervisor registers are those that can only be read and written from supervisor-privileged instructions.  Machine-State registers cannot be read or written from any instruction space.  Rather, these registers are implicitly modified during the normal operation of the core.     
 
 \subsubsection{User-Visible Registers} 
@@ -369,7 +370,7 @@ We make use of no new machine-state registers beyond what is
 currently defined in the RV64I specification.  
 
 \newpage
-\subsubsection{XBGAS Register Indexing}
+\subsubsection{SV-XBGAS Register Indexing}
 A summary of the permissible xBGAS register indices, their assembly 
 mnemonics and associated base register mappings is outlined as follows.  
 Note the explicit negation of specific extended registers in order to prohibit 
@@ -380,7 +381,7 @@ map directly to complementary base register encodings.
 \begin{center}
 \begin{tabular}{| c | c | c | c | c |}
 \hline
-Register & xBGAS Mapping & Index & Description & ABI Name\\ \hline
+Register & SV-xBGAS Mapping & Index & Description & ABI Name\\ \hline
 \hline
 e0-e9 & x0-x9 & 0b0000-0b1001 & Utilized for memory translation & e0-e9\\
 \hline
@@ -399,7 +400,7 @@ e28-31 & x28-31 & 0b11100-0b11111 & Temporaries & e28-31\\
 %	SECTION 3
 %----------------------------------------------------------------------------------------
 \newpage
-\section{xBGAS Instruction Set Extension}
+\section{SV-xBGAS Instruction Set Extension}
 
 %------- INTEGER LOAD/STORE INSTRUCTIONS
 \subsection{Integer Load/Store Instructions}
@@ -843,15 +844,15 @@ extd = ext1 + imm
 %------- SUPERVISOR INSTRUCTIONS
 \subsection{Supervisor Instructions}
 
-There are currently no supervisor instructions defined in the xBGAS extension.  
+There are currently no supervisor instructions defined in the SV-xBGAS extension.  
 
 %----------------------------------------------------------------------------------------
 %	SECTION 4
 %----------------------------------------------------------------------------------------
 \newpage
-\section{xBGAS Instruction Set Listings}
+\section{SV-xBGAS Instruction Set Listings}
 
-\subsection{xBGAS Load/Store Instructions}
+\subsection{SV-xBGAS Load/Store Instructions}
 
 \begin{center}
 \begin{small}
@@ -976,7 +977,7 @@ erse ext1, rs2, ext3 & 0100011 &  rs2 & ext1 & 011 & rs1 & 0110011\\
 \end{center}
 
 \newpage
-\subsection{xBGAS Address Management Instructions}
+\subsection{SV-xBGAS Address Management Instructions}
 
 \begin{center}
 \begin{small}
@@ -1043,8 +1044,8 @@ moveee extd, ext1 & eaddix extd, ext1, 0\\
 
 Many thanks to the following individuals for their advice and 
 effort in reviewing this specification: Bruce Jacobs (University 
-of Maryland), Kurt Keville (MIT), John Shalf (Lawrence Berkeley 
-National Laboratory/NERSC) and Steven Wallach (Micron).  
+of Maryland), Kurt Keville (MIT) and John Shalf (Lawrence Berkeley 
+National Laboratory/NERSC).
 
 %----------------------------------------------------------------------------------------
 %	REFERENCES
@@ -1055,7 +1056,7 @@ National Laboratory/NERSC) and Steven Wallach (Micron).
 \bibliography{xbgas-arch-spec}
 
 %----------------------------------------------------------------------------------------
-%	GLOSSERY
+%	GLOSSARY
 %----------------------------------------------------------------------------------------
 \newpage
 \input{glossary}
