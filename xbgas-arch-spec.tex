@@ -276,7 +276,7 @@ trigger the codes listed in Table~\ref{scauses}.
 
 \begin{table*}[h!]
 \begin{center}
-\begin{tabular}{|r|r|l|l|}
+\begin{tabular}{|c|c|l|l|}
 
   \hline
   Interrupt & Exception Code  & Description \\
@@ -359,6 +359,33 @@ register are interpreted as the standard SV128 object ID.  This is shown in Figu
 \label{fig:objaddr}
 \end{center}
 \end{figure}
+
+\subsection{SV-xBGAS Address Formation}
+
+\begin{table*}[h!]
+\begin{center}
+\begin{tabular}{|c|c|c|c|}
+\hline
+\textbf{Object Type} & \textbf{Function} & \textbf{RV32} & \textbf{RV64} \\
+\hline
+0-3 & Kernel Object & Yes & Yes\\
+\hline
+4 & Local Object & Yes & Yes\\
+\hline
+5 & PGAS Object & Yes & Yes\\
+\hline
+6-13 & Reserved & N/A & N/A\\
+\hline
+14 & RV64 & No & Yes\\
+\hline
+15 & 60 Bit Object ID & No & Yes\\
+
+\hline
+\end{tabular}
+\end{center}
+\caption{SV-xBGAS Object Identifiers}
+\label{tab:objectids}
+\end{table*}
 
 \subsection{SV-xBGAS Register State}
 In addition to the registers defined as a part of the base RISC-V IMAFD ISA, we define an additional set of registers for the xBGAS extension.  The register extension is defined in terms of User-Visible, Supervisor and Machine-State registers.  User-Visible registers are those that can be read and written from normal user instructions.  Supervisor registers are those that can only be read and written from supervisor-privileged instructions.  Machine-State registers cannot be read or written from any instruction space.  Rather, these registers are implicitly modified during the normal operation of the core.     
