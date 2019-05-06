@@ -50,7 +50,7 @@
 \chead{\textbf{xBGAS Architecture Extension Specification}}  % -- classification
 \rhead{}
 \cfoot{} %-- format: TR YYYY-RRR-V.V; y = year; r = report; v = version
-\lfoot{\textbf{xBGAS 0.0.6}}  % -- classification
+\lfoot{\textbf{xBGAS 0.0.7}}  % -- classification
 \rfoot{\thepage}      % -- page number
 
 %\usepackage{times} % Uncomment to use the Times New Roman font
@@ -80,11 +80,13 @@
 \begin{center}
 \begin{tabular}{l r}
 Date: & \today \\
-Version: & 0.0.6 \\ % Date the experiment was performed
+Version: & 0.0.7 \\ % Date the experiment was performed
 Authors: & John Leidel\\
 & David Donofrio\\
 & Farzad Fatollahi-Fard\\
-& Xi Wang
+& Xi Wang\\
+& Brody Williams\\
+& Alan Ehret
 \end{tabular}
 \end{center}
 
@@ -192,7 +194,7 @@ layer on top of xBGAS-style addressing.  Do not expect that xBGAS addressing mod
 automatically function with pre-defined RV64I virtualization mechanisms.  This is beyond the 
 scope of this document.
 
-\item \textbf{Enclaves}: This specification makes no mention of implementating functionality 
+\item \textbf{Enclaves}: This specification makes no mention of implementing functionality 
 associated with system or machine-level security enclaves.  Any security-related functionality 
 required to enforce enclaves on a system with xBGAS extensions is beyond the scope 
 of this document.
@@ -553,16 +555,16 @@ Effective = addr(rs1)+imm
 \end{equation}
 
 %-- extended 128bit store
-\subsubsection{esq rs1, imm(rs2)}
-Store a 128-bit word using the value in the register pair \textit{rs1+ext1} 
+\subsubsection{esq rs2, imm(rs1)}
+Store a 128-bit word using the value in the register pair \textit{rs2+ext2} 
 as the source to the 128-bit address formed by adding the immediate value to 
-the 128-bit address at \textit{ext2+rs2}.  The most significant 64-bits of the source 
-are stored in the extended register at \textit{ext1} and the least significant 64-bits of the source 
-are stored in the base register at \textit{rs1}.  The effective address is calculated 
+the 128-bit address at \textit{ext1+rs1}.  The most significant 64-bits of the source 
+are stored in the extended register at \textit{ext2} and the least significant 64-bits of the source 
+are stored in the base register at \textit{rs2}.  The effective address is calculated 
 as follows:  
 
 \begin{equation}
-Effective = addr([127-64](ext2) \cdot [63-0](rs2))+imm
+Effective = addr([127-64](ext2) \cdot [63-0](rs1))+imm
 \end{equation}
 
 \begin{commentary}
@@ -574,58 +576,58 @@ to the \textit{SQ} instruction.
 \end{commentary}
 
 %-- extended 64bit store
-\subsubsection{esd rs1, imm(rs2)}
-Store a 64-bit word using the value in \textit{rs1} as the source 
+\subsubsection{esd rs2, imm(rs1)}
+Store a 64-bit word using the value in \textit{rs2} as the source 
 to the 128-bit address formed by adding the immediate value to the 
-128-bit address at \textit{ext2+rs2}.  The effective address is calculated 
+128-bit address at \textit{ext1+rs1}.  The effective address is calculated 
 as follows: 
 
 \begin{equation}
-Effective = addr([127-64](ext2) \cdot [63-0](rs2))+imm
+Effective = addr([127-64](ext1) \cdot [63-0](rs1))+imm
 \end{equation}
 
 %-- extended 32bit store
-\subsubsection{esw rs1, imm(rs2)}
-Store a 32-bit word using the value in \textit{rs1} as the source 
+\subsubsection{esw rs2, imm(rs1)}
+Store a 32-bit word using the value in \textit{rs2} as the source 
 to the 128-bit address formed by adding the immediate value to the 
-128-bit address at \textit{ext2+rs2}.  The effective address is calculated 
+128-bit address at \textit{ext1+rs1}.  The effective address is calculated 
 as follows: 
 
 \begin{equation}
-Effective = addr([127-64](ext2) \cdot [63-0](rs2))+imm
+Effective = addr([127-64](ext1) \cdot [63-0](rs1))+imm
 \end{equation}
 
 %-- extended 16bit store
-\subsubsection{esh rs1, imm(rs2)}
-Store a 16-bit word using the value in \textit{rs1} as the source 
+\subsubsection{esh rs2, imm(rs1)}
+Store a 16-bit word using the value in \textit{rs2} as the source 
 to the 128-bit address formed by adding the immediate value to the 
-128-bit address at \textit{ext2+rs2}.  The effective address is calculated 
+128-bit address at \textit{ext1+rs1}.  The effective address is calculated 
 as follows: 
 
 \begin{equation}
-Effective = addr([127-64](ext2) \cdot [63-0](rs2))+imm
+Effective = addr([127-64](ext1) \cdot [63-0](rs1))+imm
 \end{equation}
 
 %-- extended 8bit store
-\subsubsection{esb rs1, imm(rs2)}
-Store an 8-bit word using the value in \textit{rs1} as the source 
+\subsubsection{esb rs2, imm(rs1)}
+Store an 8-bit word using the value in \textit{rs2} as the source 
 to the 128-bit address formed by adding the immediate value to the 
-128-bit address at \textit{ext2+rs2}.  The effective address is calculated 
+128-bit address at \textit{ext1+rs1}.  The effective address is calculated 
 as follows: 
 
 \begin{equation}
-Effective = addr([127-64](ext2) \cdot [63-0](rs2))+imm
+Effective = addr([127-64](ext1) \cdot [63-0](rs1))+imm
 \end{equation}
 
 %-- ext context save operation 
-\subsubsection{ese ext1, imm(rs2)}
-Store a 64-bit word using the value in \textit{ext1} as the source to the 
+\subsubsection{ese ext2, imm(rs1)}
+Store a 64-bit word using the value in \textit{ext2} as the source to the 
 64-bit address formed by adding the immediate value to the 64-bit 
-address as \textit{rs2+imm}.  This operation is designed to be used for 
+address as \textit{rs1+imm}.  This operation is designed to be used for 
 context save operations.  The effective address is calculated as follows: 
 
 \begin{equation}
-Effective = addr(rs2)+imm
+Effective = addr(rs1)+imm
 \end{equation}
 
 \subsection{Raw Integer Load/Store Instructions}
@@ -886,13 +888,13 @@ elbu rd, imm(rs1) & rs1+ext1 & 100 & rd & 1110111\\
 \hline
 Mnemonic & src & base & funct3 & opcode \\ \hline
 \hline
-esd rs1, imm(rs2) & rs1 & rs2+ext2 & 011 & 1111011\\
+esd rs2, imm(rs1) & rs2 & rs1+ext1 & 011 & 1111011\\
 \hline
-esw rs1, imm(rs2) & rs1 & rs2+ext2 & 010 & 1111011\\
+esw rs2, imm(rs1) & rs2 & rs1+ext1 & 010 & 1111011\\
 \hline
-esh rs1, imm(rs2) & rs1 & rs2+ext2 & 001 & 1111011\\
+esh rs2, imm(rs1) & rs2 & rs1+ext1 & 001 & 1111011\\
 \hline
-esb rs1, imm(rs2) & rs1 & rs2+ext2 & 000 & 1111011\\
+esb rs2, imm(rs1) & rs2 & rs1+ext1 & 000 & 1111011\\
 \hline
 \end{tabular}
 \end{center}
@@ -920,9 +922,9 @@ ele extd, imm(rs1) & rs1 & 111 & rd & 1110111\\
 \hline
 Mnemonic & src & base & funct3 & opcode \\ \hline
 \hline
-esq rs1, imm(rs2) & rs1 & rs2+ext2 & 100 & 1111011\\
+esq rs2, imm(rs1) & rs2 & rs1+ext1 & 100 & 1111011\\
 \hline
-ese ext1, imm(rs2) & ext1 & rs2 & 101 & 1111011\\
+ese ext2, imm(rs1) & ext2 & rs1 & 101 & 1111011\\
 \hline
 \end{tabular}
 \end{center}
