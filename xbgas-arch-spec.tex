@@ -125,13 +125,13 @@ Authors: & John Leidel\\
 \subsection{xBGAS Overview}
 
 The goal of the \gls{xBGAS} extension described herein is to provided \textit{extended} 
-addressing capabilities beyond the core 64-bit addressing modes available in the 
-base RISC-V RV64I instruction set specification.  These extensions provide up 
-to 128 bits of virtual or physical address space (depending upon the target implementation) 
+addressing capabilities beyond the core 64 or 32-bit addressing modes available in the 
+base RISC-V RV32I and RV64I instruction set specifications, respectively.  These extensions provide up 
+to \texttt{(2 x XLEN)} bits of virtual or physical address space (depending upon the target implementation) 
 to implementors in the form of basic instruction extensions that utilize extended 
 register sets for the 64 most significant bits of the target address.  
 
-Note that these extensions \textbf{do not} provide an inherently flat 128-bit address space.  
+Note that these extensions \textbf{do not} provide an inherently flat 64 or 128-bit address space.  
 Further, they do not explicitly modify the incumbent RV32I or RV64I memory access 
 methodologies.  Rather, these additions are extensions to the base level specifications in order to 
 permit normal, byte-aligned memory access to address spaces larger than 64-bits.  In 
@@ -148,7 +148,7 @@ machine state.  In this manner, fits within the existing RISC-V instruction
 formats and encodings.  However, the xBGAS extension does instantiate 
 additional machine state in terms of user-visible and supervisor registers.
 
-The xBGAS specification functions an extension to the existing RV64I~\cite{RVSpec} 
+The xBGAS specification functions an extension to the existing RV32I or RV64I~\cite{RVSpec} 
 base instruction set specification (and all inherited instructions therein).  In this 
 manner, the xBGAS extension is truly an extension, rather than a full expansion 
 of the register \textit{XLEN} and the associated ALU.
@@ -167,11 +167,11 @@ when operating with 128-bit addressing.  It is up to the implementor to define i
 is present and/or utilized.  
 
 \item \textbf{Address Encoding}: This specification does not define any specific 64-bit or 128-bit 
-address encoding format beyond what is described in the base RV64I specification.  Implementors 
+address encoding formats beyond what is described in the base RV64I specification.  Implementors 
 may choose to utilize a partitioned addressing schema, a flat schema or combinations thereof.    
 
 \item \textbf{Scalability}: This specification does not define the scalability of the least significant 
-or most significant 64-bit address words.  For example, it is well within the implementor's power to 
+or most significant (extended) address words.  For example, it is well within the implementor's power to 
 utilize a 48-bit base address encoding and a small number of most significant (extended) encoding bits.
 
 \item \textbf{Extended Memory Translation}: This specification does not require the use of any 
@@ -203,6 +203,36 @@ of this document.
 
 \end{itemize}
 
+\subsection{xBGAS Memory Ordering Requirements}
+
+The xBGAS extension defines explicit minimum memory ordering constraints.  While it is 
+permissible to augment these constraints and define more strict memory ordering, this is the minimum 
+set required to be compliant with the architecture specification.
+
+We define the memory ordering constraints in terms of the style of memory request utilized.  Local memory 
+requests are those that utilize the existing, base instruction set mnemonics and encodings.  For example, the 
+\texttt{lw} instruction is defined to load a 32-bit word from memory in the RV32I and RV64I base ISAs.  Global 
+or extended memory requests are defined as any requests that utilize the extended addressing modes for operation.  
+This includes any memory operations defined in this specification.  
+
+We define the minimum local and global memory ordering constraints as follow: 
+
+\begin{itemize}
+\item \textbf{Local Memory Ordering}: The local memory ordering model will inherit the base ISA implementation's memory ordering 
+model.  If the base memory ordering is purely \textit{weak}, the local memory ordering will be weak.  If the base memory ordering adheres 
+to \textit{total store ordering}, the local memory ordering will adhere to \textit{TSO}.  
+
+\item \textbf{Global Memory Ordering}: The global memory ordering must be, at a minimum, purely \textit{weak} memory ordering.  This weak 
+ordering does \textbf{NOT} ensure store ordering within a single thread of execution.    
+\end{itemize}
+
+\begin{commentary}
+Note that utilizing extended addressing techniques where the target object or node is identical to the source host must 
+also adhere to the extended memory ordering constraints.  This loopback mode of operation, despite accessing local memory, 
+utilizes the extended addressing mode and must therefore adhere to the extended addressing ordering constraints.  
+\end{commentary}
+
+\clearpage
 \subsection{xBGAS Supervisor Specification Requirements}
 
 \subsubsection{Machine ISA Register {\tt misa}}
