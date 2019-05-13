@@ -241,7 +241,7 @@ As noted by the supervisor specification~\cite{RVSuperSpec}, the
 \textit{misa} CSR register is an XLEN-bit \warl\ read-write register reporting 
 the supported ISA by the hart.  Normally, the MXL (Machine XLEN) field 
 encodes the native base integer width as shown in the supervisor specification.  
-In the case of xBGAS, this value is set to represent a 64-bit base ISA (\textit{MXL=2}).  We do 
+In the case of xBGAS, this value is set to represent a 32-bit or 64-bit base ISA (\textit{MXL=1} or \textit{MXL=2}).  We do 
 not override this value as the xBGAS implementation described herein does not 
 natively modify the register width of the general purpose registers beyond 64-bits.    
 
@@ -332,13 +332,13 @@ trigger the codes listed in Table~\ref{scauses}.
 
 \subsection{xBGAS Extended Addressing Logic}
 
-At the core of the xBGAS implementation is the ability to utilize existing RV64I 
+At the core of the xBGAS implementation is the ability to utilize existing RV32I or RV64I 
 binary blobs without issue.  In this manner, the xBGAS extension makes use 
-of the base RV64I register length, memory operations and ALU functionality.  
+of the base RV32I or RV64I register length (\textit{XLEN}), memory operations and ALU functionality.  
 They key portions of the xBGAS functionality and associated address mode 
 is implemented via an extended register file that is mapped to a series 
 of base registers as well as a set of xBGAS-specific instructions to perform 
-standard load, store and register manipulation of extended 128-bit addresses.  We 
+standard load, store and register manipulation of extended 64-bit or 128-bit addresses, respectively.  We 
 see this extended register set depicted in Figure~\ref{fig:machineorganization}.  
 
 \begin{figure}[h!]
@@ -385,7 +385,9 @@ value in the instruction payload for any potential offset calculations.
 In addition to the registers defined as a part of the base RISC-V IMAFD ISA, we define an additional set of registers for the xBGAS extension.  The register extension is defined in terms of User-Visible, Supervisor and Machine-State registers.  User-Visible registers are those that can be read and written from normal user instructions.  Supervisor registers are those that can only be read and written from supervisor-privileged instructions.  Machine-State registers cannot be read or written from any instruction space.  Rather, these registers are implicitly modified during the normal operation of the core.     
 
 \subsubsection{User-Visible Registers} 
-The xBGAS extension adds a series of \emph{extended} registers to the list of user-visible registers.  Each extended register is an unsigned 64-bit register that contains the most significant 64-bits of a 128-bit memory address.  In this manner, normal 64-bit and 32-bit memory operations (RV64I and RV32I respectively) are effectively unchanged.  The xBGAS extended registers can only be utilized for memory operations when utilizing xBGAS load and store operations.  Further, extended registers can only be read from and written to from xBGAS Address Management Instructions (Section~\ref{sec:AddressManagementInstructions}).   
+The xBGAS extension adds a series of \emph{extended} registers to the list of user-visible registers.  Each extended register may utilize 
+up to \textit{XLEN} bits of encoding space to form an extended address that is up to two times the size of the base \textit{XLEN} register.  
+In this manner, normal 64-bit and 32-bit memory operations (RV64I and RV32I respectively) are effectively unchanged.  The xBGAS extended registers can only be utilized for memory operations when utilizing xBGAS load and store operations.  Further, extended registers can only be read from and written to from xBGAS Address Management Instructions (Section~\ref{sec:AddressManagementInstructions}).   
 
 \begin{center}
 \makebox[\textwidth][s]{63 0}
@@ -400,7 +402,7 @@ currently defined in the RV64I specification.
 \subsubsection{Machine-State Registers}
 
 We make use of no new machine-state registers beyond what is 
-currently defined in the RV64I specification.  
+currently defined in the RV32I or RV64I specifications.  
 
 \newpage
 \subsubsection{XBGAS Register Indexing}
@@ -408,7 +410,7 @@ A summary of the permissible xBGAS register indices, their assembly
 mnemonics and associated base register mappings is outlined as follows.  
 Note the explicit negation of specific extended registers in order to prohibit 
 erroneous use of the stack, frame and other core ABI dependencies.  The register 
-indexing follows the base RV64I encoding standard with 5-bit indices that 
+indexing follows the base RV32I and RV64I encoding standard with 5-bit indices that 
 map directly to complementary base register encodings.  
 
 \begin{center}
@@ -443,8 +445,8 @@ RV64I load and store instructions.  Load instructions are encoded in the I-type 
 instructions are encoded in the S-type format.  The effective byte address is obtained by adding 
 register pair \textit{rs1} + \textit{ext1} to the sign-extended 12-bit offset.  Note that base address 
 (\textit{rs1} + \textit{ext1}) are obtained by combining the values of the base register \textit{rs1} 
-and its complementary extended registers \textit{ext1}.  The least significant 64 bits of the address
-[63-0] are encoded in the base register.  The most significant 64 bits of the address [127-64] 
+and its complementary extended registers \textit{ext1}.  The least significant 32 or 64 bits of the address
+([31]-0] or [63-0]) are encoded in the base register.  The most significant 32 [63-32] or 64 bits of the address [127-64] 
 are encoded in the extended register.  
 
 \vspace{-0.4in}
@@ -509,7 +511,8 @@ The xBGAS extension explicitly contains a definition for loading 128-bit values.
 This is specified in order to provide support for handling fully-qualified (base 
 address + extended) xBGAS addresses in the absence of the RV128I extension.  However, 
 if the microarchitecture supports RV128I, the \textit{ELQ} instruction can be aliased 
-to the \textit{LQ} instruction.
+to the \textit{LQ} instruction.  Note that this instruction is only support in xBGAS when the base 
+instruction set is RV64I.  
 \end{commentary}
 
 
@@ -523,56 +526,76 @@ address is calculated as follows:
 Effective = addr([127-64](ext1) \cdot [63-0](rs1))+imm
 \end{equation}
 
+\begin{commentary}
+Note that this instruction is only support in xBGAS when the base 
+instruction set is RV64I.
+\end{commentary}
+
 %-- extended 32bit load
 \subsubsection{elw rd, imm(rs1)}
 Load a 32-bit word from the address formed by adding the immediate value to the 
-128-bit address at \textit{ext1+rs1}.  Store the results in \textit{rd}.  The effective 
+extended address at \textit{ext1+rs1}.  Store the results in \textit{rd}.  The effective 
 address is calculated as follows: 
 
 \begin{equation}
 Effective = addr([127-64](ext1) \cdot [63-0](rs1))+imm
+\end{equation}
+\begin{equation}
+Effective = addr([63-32](ext1) \cdot [31-0](rs1))+imm
 \end{equation}
 
 %-- extended 16bit load
 \subsubsection{elh rd, imm(rs1)}
 Load a 16-bit word from the address formed by adding the immediate value to the 
-128-bit address at \textit{ext1+rs1}.  Store the results in \textit{rd}.  The effective 
+extended address at \textit{ext1+rs1}.  Store the results in \textit{rd}.  The effective 
 address is calculated as follows: 
 
 \begin{equation}
 Effective = addr([127-64](ext1) \cdot [63-0](rs1))+imm
+\end{equation}
+\begin{equation}
+Effective = addr([63-32](ext1) \cdot [31-0](rs1))+imm
 \end{equation}
 
 %-- extended 16bit load + zero extend
 \subsubsection{elhu rd, imm(rs1)}
 Load a 16-bit word from the address formed by adding the immediate value to the 
-128-bit address at \textit{ext1+rs1}.  Store the results in \textit{rd}.  
- The target register is zero extended to 64-bits.  The effective 
+extended address at \textit{ext1+rs1}.  Store the results in \textit{rd}.  
+ The target register is zero extended to XLEN-bits.  The effective 
 address is calculated as follows: 
 
 \begin{equation}
 Effective = addr([127-64](ext1) \cdot [63-0](rs1))+imm
+\end{equation}
+\begin{equation}
+Effective = addr([63-32](ext1) \cdot [31-0](rs1))+imm
 \end{equation}
 
 %-- extended 8bit load
 \subsubsection{elb rd, imm(rs1)}
 Load an 8-bit word from the address formed by adding the immediate value to the 
-128-bit address at \textit{ext1+rs1}.  Store the results in \textit{rd}.  The effective 
+extended address at \textit{ext1+rs1}.  Store the results in \textit{rd}.  The effective 
 address is calculated as follows: 
 
 \begin{equation}
 Effective = addr([127-64](ext1) \cdot [63-0](rs1))+imm
 \end{equation}
+\begin{equation}
+Effective = addr([63-32](ext1) \cdot [31-0](rs1))+imm
+\end{equation}
 
 %-- extended 8bit load + zero extend
 \subsubsection{elbu rd, imm(rs1)}
 Load an 8-bit word from the address formed by adding the immediate value to the 
-128-bit address at \textit{ext1+rs1}.  Store the results in \textit{rd}.  
- The target register is zero extended to 64-bits.  The effective 
+extended address at \textit{ext1+rs1}.  Store the results in \textit{rd}.  
+ The target register is zero extended to XLEN-bits.  The effective 
 address is calculated as follows: 
 
 \begin{equation}
 Effective = addr([127-64](ext1) \cdot [63-0](rs1))+imm
+\end{equation}
+\begin{equation}
+Effective = addr([63-32](ext1) \cdot [31-0](rs1))+imm
 \end{equation}
 
 %-- extended register load
@@ -585,6 +608,11 @@ address is calculated as follows:
 \begin{equation}
 Effective = addr(rs1)+imm
 \end{equation}
+
+\begin{commentary}
+Note that this instruction is only support in xBGAS when the base 
+instruction set is RV64I.
+\end{commentary}
 
 %-- extended 128bit store
 \subsubsection{esq rs2, imm(rs1)}
@@ -604,7 +632,8 @@ The xBGAS extension explicitly contains a definition for storing 128-bit values.
 This is specified in order to provide support for handling fully-qualified (base 
 address + extended) xBGAS addresses in the absence of the RV128I extension.  However, 
 if the microarchitecture supports RV128I, the \textit{ESQ} instruction can be aliased 
-to the \textit{SQ} instruction.
+to the \textit{SQ} instruction.  Note that this instruction is only support in xBGAS when the base 
+instruction set is RV64I.
 \end{commentary}
 
 %-- extended 64bit store
@@ -618,37 +647,51 @@ as follows:
 Effective = addr([127-64](ext1) \cdot [63-0](rs1))+imm
 \end{equation}
 
+\begin{commentary}
+Note that this instruction is only support in xBGAS when the base 
+instruction set is RV64I.
+\end{commentary}
+
 %-- extended 32bit store
 \subsubsection{esw rs2, imm(rs1)}
 Store a 32-bit word using the value in \textit{rs2} as the source 
-to the 128-bit address formed by adding the immediate value to the 
-128-bit address at \textit{ext1+rs1}.  The effective address is calculated 
+to the extended address formed by adding the immediate value to the 
+extended address at \textit{ext1+rs1}.  The effective address is calculated 
 as follows: 
 
 \begin{equation}
 Effective = addr([127-64](ext1) \cdot [63-0](rs1))+imm
+\end{equation}
+\begin{equation}
+Effective = addr([63-32](ext1) \cdot [31-0](rs1))+imm
 \end{equation}
 
 %-- extended 16bit store
 \subsubsection{esh rs2, imm(rs1)}
 Store a 16-bit word using the value in \textit{rs2} as the source 
-to the 128-bit address formed by adding the immediate value to the 
-128-bit address at \textit{ext1+rs1}.  The effective address is calculated 
+to the extended address formed by adding the immediate value to the 
+extended address at \textit{ext1+rs1}.  The effective address is calculated 
 as follows: 
 
 \begin{equation}
 Effective = addr([127-64](ext1) \cdot [63-0](rs1))+imm
 \end{equation}
+\begin{equation}
+Effective = addr([63-32](ext1) \cdot [31-0](rs1))+imm
+\end{equation}
 
 %-- extended 8bit store
 \subsubsection{esb rs2, imm(rs1)}
 Store an 8-bit word using the value in \textit{rs2} as the source 
-to the 128-bit address formed by adding the immediate value to the 
-128-bit address at \textit{ext1+rs1}.  The effective address is calculated 
+to the extended address formed by adding the immediate value to the 
+extended address at \textit{ext1+rs1}.  The effective address is calculated 
 as follows: 
 
 \begin{equation}
 Effective = addr([127-64](ext1) \cdot [63-0](rs1))+imm
+\end{equation}
+\begin{equation}
+Effective = addr([63-32](ext1) \cdot [31-0](rs1))+imm
 \end{equation}
 
 %-- ext context save operation 
@@ -662,6 +705,11 @@ context save operations.  The effective address is calculated as follows:
 Effective = addr(rs1)+imm
 \end{equation}
 
+\begin{commentary}
+Note that this instruction is only support in xBGAS when the base 
+instruction set is RV64I.
+\end{commentary}
+
 \subsection{Raw Integer Load/Store Instructions}
 \label{sec:RawIntegerLoadStoreInstructions}
 
@@ -669,7 +717,7 @@ The raw integer load and store instructions in the xBGAS specification
 are designed to permit users and compilers to generate raw, three operand 
 memory operations using explicit, non-contiguous register indexing.  In this manner, 
 the instruction explicitly specifies the base register as well as the extended register 
-to form the full 128-bit address encoding.  The destination register is specified as 
+to form the full extended address encoding.  The destination register is specified as 
 in all other forms of the load/store instructions.  We encode these instructions 
 using the standard RISC-V R-type format as shown in Figure~\ref{fig:rinst}.  
 
@@ -711,56 +759,77 @@ The effective address is calculated as follows:
 Effective = addr([127-64](ext2) \cdot [63-0](rs1))
 \end{equation}
 
+\begin{commentary}
+Note that this instruction is only support in xBGAS when the base 
+instruction set is RV64I.
+\end{commentary}
+
 \subsubsection{erlw rd, rs1, ext2}
 
 Load an 32-bit word from the address formed by adding the immediate value to the 
-128-bit address at \textit{ext2+rs1}.  Store the results in \textit{rd}.  
+extended address at \textit{ext2+rs1}.  Store the results in \textit{rd}.  
 The effective address is calculated as follows:
 
 \begin{equation}
 Effective = addr([127-64](ext2) \cdot [63-0](rs1))
+\end{equation}
+\begin{equation}
+Effective = addr([63-32](ext2) \cdot [31-0](rs1))
 \end{equation}
 
 \subsubsection{erlh rd, rs1, ext2}
 
 Load an 16-bit word from the address formed by adding the immediate value to the 
-128-bit address at \textit{ext2+rs1}.  Store the results in \textit{rd}.  
+extended address at \textit{ext2+rs1}.  Store the results in \textit{rd}.  
 The effective address is calculated as follows:
 
 \begin{equation}
 Effective = addr([127-64](ext2) \cdot [63-0](rs1))
 \end{equation}
 
+\begin{equation}
+Effective = addr([63-32](ext2) \cdot [31-0](rs1))
+\end{equation}
+
 \subsubsection{erlhu rd, rs1, ext2}
 
 Load an 16-bit word from the address formed by adding the immediate value to the 
-128-bit address at \textit{ext2+rs1}.  Store the results in \textit{rd}.  
- The target register is zero extended to 64-bits.  The effective 
+extended address at \textit{ext2+rs1}.  Store the results in \textit{rd}.  
+ The target register is zero extended to XLEN-bits.  The effective 
 address is calculated as follows:
 
 \begin{equation}
 Effective = addr([127-64](ext2) \cdot [63-0](rs1))
 \end{equation}
+\begin{equation}
+Effective = addr([63-32](ext2) \cdot [31-0](rs1))
+\end{equation}
 
 \subsubsection{erlb rd, rs1, ext2}
 
 Load an 8-bit word from the address formed by adding the immediate value to the 
-128-bit address at \textit{ext2+rs1}.  Store the results in \textit{rd}.  
+extended address at \textit{ext2+rs1}.  Store the results in \textit{rd}.  
 The effective address is calculated as follows: 
 
 \begin{equation}
 Effective = addr([127-64](ext2) \cdot [63-0](rs1))
 \end{equation}
+\begin{equation}
+Effective = addr([63-32](ext2) \cdot [31-0](rs1))
+\end{equation}
 
 \subsubsection{erlbu rd, rs1, ext2}
 
 Load an 8-bit word from the address formed by adding the immediate value to the 
-128-bit address at \textit{ext2+rs1}.  Store the results in \textit{rd}.  
- The target register is zero extended to 64-bits.  The effective 
+extended address at \textit{ext2+rs1}.  Store the results in \textit{rd}.  
+ The target register is zero extended to XLEN-bits.  The effective 
 address is calculated as follows: 
 
 \begin{equation}
 Effective = addr([127-64](ext2) \cdot [63-0](rs1))
+\end{equation}
+\begin{equation}
+Effective = addr([63-32](ext2) \cdot [31-0](rs1))
 \end{equation}
 
 \subsubsection{erle extd, rs1, ext2}
@@ -773,6 +842,11 @@ The effective address is calculated as follows:
 Effective = addr([127-64](ext2) \cdot [63-0](rs1))
 \end{equation}
 
+\begin{commentary}
+Note that this instruction is only support in xBGAS when the base 
+instruction set is RV64I.
+\end{commentary}
+
 \subsubsection{ersd rs1, rs2, ext3}
 
 Store an 64-bit word using the value in \textit{rs1} as the source 
@@ -784,37 +858,51 @@ as follows:
 Effective = addr([127-64](ext3) \cdot [63-0](rs2))
 \end{equation}
 
+\begin{commentary}
+Note that this instruction is only support in xBGAS when the base 
+instruction set is RV64I.
+\end{commentary}
+
 \subsubsection{ersw rs1, rs2, ext3}
 
 Store a 32-bit word using the value in \textit{rs1} as the source 
-to the 128-bit address formed by adding the values of
-128-bit address at \textit{ext3+rs2}.  The effective address is calculated 
+to the extended address formed by adding the values of
+extended address at \textit{ext3+rs2}.  The effective address is calculated 
 as follows: 
 
 \begin{equation}
 Effective = addr([127-64](ext3) \cdot [63-0](rs2))
+\end{equation}
+\begin{equation}
+Effective = addr([63-32](ext3) \cdot [31-0](rs2))
 \end{equation}
 
 \subsubsection{ersh rs1, rs2, ext3}
 
 Store a 16-bit word using the value in \textit{rs1} as the source 
-to the 128-bit address formed by adding the values of
-128-bit address at \textit{ext3+rs2}.  The effective address is calculated 
+to the extended address formed by adding the values of
+extended address at \textit{ext3+rs2}.  The effective address is calculated 
 as follows: 
 
 \begin{equation}
 Effective = addr([127-64](ext3) \cdot [63-0](rs2))
 \end{equation}
+\begin{equation}
+Effective = addr([63-32](ext3) \cdot [31-0](rs2))
+\end{equation}
 
 \subsubsection{ersb rs1, rs2, ext3}
 
 Store an 8-bit word using the value in \textit{rs1} as the source 
-to the 128-bit address formed by adding the values of
-128-bit address at \textit{ext3+rs2}.  The effective address is calculated 
+to the extended address formed by adding the values of
+extended address at \textit{ext3+rs2}.  The effective address is calculated 
 as follows: 
 
 \begin{equation}
 Effective = addr([127-64](ext3) \cdot [63-0](rs2))
+\end{equation}
+\begin{equation}
+Effective = addr([63-32](ext3) \cdot [31-0](rs2))
 \end{equation}
 
 \subsubsection{erse ext1, rs2, ext3}
@@ -828,6 +916,11 @@ as follows:
 Effective = addr([127-64](ext3) \cdot [63-0](rs2))
 \end{equation}
 
+\begin{commentary}
+Note that this instruction is only support in xBGAS when the base 
+instruction set is RV64I.
+\end{commentary}
+
 %------- Address Management Instructions
 \subsection{Address Management Instructions}
 \label{sec:AddressManagementInstructions}
@@ -840,7 +933,7 @@ which is consistent with the base RISCV integer instruction sets.
 
 \subsubsection{eaddi rd, ext1, imm}
 
-Perform an unsigned 64-bit add operation of the value stored in the extended 
+Perform an unsigned XLEN-bit add operation of the value stored in the extended 
 register \textit{ext1} with the included immediate value.  Store the result 
 in the target base register \textit{rd}.  For this operation, the extended and base registers 
 do not need to share the same index.  This operation may be encoded 
@@ -853,7 +946,7 @@ rd = ext1 + imm
 
 \subsubsection{eaddie extd, rs1, imm}
 
-Perform an unsigned 64-bit add operation of the value stored in the base 
+Perform an unsigned XLEN-bit add operation of the value stored in the base 
 register \textit{rs1} with the included immediate value.  Store the result in the 
 target extended register \textit{extd}.  This operation may be encoded 
 using an assembly shorthand for moving values from base registers 
@@ -865,7 +958,7 @@ extd = rs1 + imm
 
 \subsubsection{eaddix extd, ext1, imm}
 
-Perform an unsigned 64-bit add operation of the value stored in the extended
+Perform an unsigned XLEN-bit add operation of the value stored in the extended
 register \textit{ext1} with the included immediate value.  Store the result in the 
 target extended register \textit{extd}.  This operation may be encoded using 
 an assembly shorthand for moving values between extended registers.  
