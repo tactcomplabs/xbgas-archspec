@@ -408,8 +408,8 @@ xBGAS load and store instructions are encoded in the manner as the standard RV32
 RV64I load and store instructions.  Load instructions are encoded in the I-type format and store 
 instructions are encoded in the S-type format.  The effective byte address is obtained by adding 
 register pair \textit{rs1} + \textit{ext1} to the sign-extended 12-bit offset.  Note that base address 
-(\textit{rs1} + \textit{ext1}) are obtained by combining the values of the base register \textit{rs1} 
-and its complementary extended registers \textit{ext1}.  The least significant 64 bits of the address
+(\textit{rs1} + \textit{ext1}) is obtained by combining the values of the base register \textit{rs1} 
+and its complementary extended register \textit{ext1}.  The least significant 64 bits of the address
 [63-0] are encoded in the base register.  The most significant 64 bits of the address [127-64] 
 are encoded in the extended register.  
 
