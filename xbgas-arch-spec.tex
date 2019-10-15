@@ -552,11 +552,8 @@ Effective = addr(rs1)+imm
 
 %-- extended 128bit store
 \subsubsection{esq rs1, imm(rs2)}
-Store a 128-bit word using the value in the register pair \regpair{ext1}{rs1} 
-as the source to the 128-bit address formed by adding the immediate value to 
-the 128-bit address \regpair{ext2}{rs2}.  The most significant 64-bits of the source 
-are stored in the extended register at \textit{ext1} and the least significant 64-bits of the source 
-are stored in the base register at \textit{rs1}.  The effective address is calculated 
+Store the 128-bit value in the register pair \regpair{ext1}{rs1} in memory at the 128-bit address formed by adding the immediate value to 
+the 128-bit address \regpair{ext2}{rs2}.  The effective address is calculated 
 as follows:  
 
 \begin{equation}
