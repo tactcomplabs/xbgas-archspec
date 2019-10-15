@@ -542,7 +542,7 @@ Effective = addr([127-64](ext1) \cdot [63-0](rs1))+imm
 %-- extended register load
 \subsubsection{ele extd, imm(rs1)}
 Load a 64-bit word from the address formed by adding the immediate value to the 
-64-bit address at \textit{rs1}.  Store the results in the extended register \textit{extd}.  
+64-bit address in \textit{rs1}.  Store the result in the extended register \textit{extd}.  
 This operation is designed to be utilized for context restore operations.  The effective 
 address is calculated as follows: 
 
@@ -616,7 +616,7 @@ Effective = addr([127-64](ext2) \cdot [63-0](rs2))+imm
 \subsubsection{ese ext1, imm(rs2)}
 Store a 64-bit word using the value in \textit{ext1} as the source to the 
 64-bit address formed by adding the immediate value to the 64-bit 
-address as \textit{rs2+imm}.  This operation is designed to be used for 
+address in \textit{rs2}.  This operation is designed to be used for 
 context save operations.  The effective address is calculated as follows: 
 
 \begin{equation}
