@@ -664,8 +664,7 @@ R-type \\
 
 \subsubsection{erld rd, rs1, ext2}
 
-Load an 64-bit word from the address formed by adding the immediate value to the 
-128-bit address \regpair{ext2}{rs1}.  Store the results in \textit{rd}.  
+Load a 64-bit word from the 128-bit address \regpair{ext2}{rs1}.  Store the result in \textit{rd}.  
 The effective address is calculated as follows:
 
 \begin{equation}
@@ -674,8 +673,7 @@ Effective = addr([127-64](ext2) \cdot [63-0](rs1))
 
 \subsubsection{erlw rd, rs1, ext2}
 
-Load an 32-bit word from the address formed by adding the immediate value to the 
-128-bit address \regpair{ext2}{rs1}.  Store the result sign extended to 64 bits in \textit{rd}.  
+Load a 32-bit word from the 128-bit address \regpair{ext2}{rs1}.  Store the result sign extended to 64 bits in \textit{rd}.  
 The effective address is calculated as follows:
 
 \begin{equation}
@@ -684,8 +682,7 @@ Effective = addr([127-64](ext2) \cdot [63-0](rs1))
 
 \subsubsection{erlh rd, rs1, ext2}
 
-Load an 16-bit word from the address formed by adding the immediate value to the 
-128-bit address \regpair{ext2}{rs1}.  Store the result sign extended to 64 bits in \textit{rd}.  
+Load a 16-bit word from the 128-bit address \regpair{ext2}{rs1}.  Store the result sign extended to 64 bits in \textit{rd}.  
 The effective address is calculated as follows:
 
 \begin{equation}
@@ -694,8 +691,7 @@ Effective = addr([127-64](ext2) \cdot [63-0](rs1))
 
 \subsubsection{erlhu rd, rs1, ext2}
 
-Load an 16-bit word from the address formed by adding the immediate value to the 
-128-bit address \regpair{ext2}{rs1}.  Store the result zero extended to 64 bits in \textit{rd}.  The effective 
+Load a 16-bit word from the 128-bit address \regpair{ext2}{rs1}.  Store the result zero extended to 64 bits in \textit{rd}.  The effective 
 address is calculated as follows:
 
 \begin{equation}
@@ -704,8 +700,7 @@ Effective = addr([127-64](ext2) \cdot [63-0](rs1))
 
 \subsubsection{erlb rd, rs1, ext2}
 
-Load an 8-bit word from the address formed by adding the immediate value to the 
-128-bit address \regpair{ext2}{rs1}.  Store the result sign extended to 64 bits in \textit{rd}.  
+Load an 8-bit word from the 128-bit address \regpair{ext2}{rs1}.  Store the result sign extended to 64 bits in \textit{rd}.  
 The effective address is calculated as follows: 
 
 \begin{equation}
@@ -714,8 +709,7 @@ Effective = addr([127-64](ext2) \cdot [63-0](rs1))
 
 \subsubsection{erlbu rd, rs1, ext2}
 
-Load an 8-bit word from the address formed by adding the immediate value to the 
-128-bit address \regpair{ext2}{rs1}.  Store the result zero extended to 64 bits in \textit{rd}.  The effective 
+Load an 8-bit word from the 128-bit address \regpair{ext2}{rs1}.  Store the result zero extended to 64 bits in \textit{rd}.  The effective 
 address is calculated as follows: 
 
 \begin{equation}
@@ -724,8 +718,7 @@ Effective = addr([127-64](ext2) \cdot [63-0](rs1))
 
 \subsubsection{erle extd, rs1, ext2}
 
-Load an 64-bit word from the address formed by adding the immediate value to the 
-128-bit address \regpair{ext2}{rs1}.  Store the results in \textit{extd}.  
+Load a 64-bit word from the 128-bit address \regpair{ext2}{rs1}.  Store the result in \textit{extd}.  
 The effective address is calculated as follows:
 
 \begin{equation}
@@ -734,9 +727,8 @@ Effective = addr([127-64](ext2) \cdot [63-0](rs1))
 
 \subsubsection{ersd rs1, rs2, ext3}
 
-Store an 64-bit word using the value in \textit{rs1} as the source 
-to the 128-bit address formed by adding the values of
-128-bit address \regpair{ext3}{rs2}.  The effective address is calculated 
+Store a 64-bit word using the value in \textit{rs1} as the source 
+to the 128-bit address \regpair{ext3}{rs2}.  The effective address is calculated 
 as follows: 
 
 \begin{equation}
@@ -746,8 +738,7 @@ Effective = addr([127-64](ext3) \cdot [63-0](rs2))
 \subsubsection{ersw rs1, rs2, ext3}
 
 Store a 32-bit word using the value in \textit{rs1} as the source 
-to the 128-bit address formed by adding the values of
-128-bit address \regpair{ext3}{rs2}.  The effective address is calculated 
+to the 128-bit address \regpair{ext3}{rs2}.  The effective address is calculated 
 as follows: 
 
 \begin{equation}
@@ -757,8 +748,7 @@ Effective = addr([127-64](ext3) \cdot [63-0](rs2))
 \subsubsection{ersh rs1, rs2, ext3}
 
 Store a 16-bit word using the value in \textit{rs1} as the source 
-to the 128-bit address formed by adding the values of
-128-bit address \regpair{ext3}{rs2}.  The effective address is calculated 
+to the 128-bit address \regpair{ext3}{rs2}.  The effective address is calculated 
 as follows: 
 
 \begin{equation}
@@ -768,8 +758,7 @@ Effective = addr([127-64](ext3) \cdot [63-0](rs2))
 \subsubsection{ersb rs1, rs2, ext3}
 
 Store an 8-bit word using the value in \textit{rs1} as the source 
-to the 128-bit address formed by adding the values of
-128-bit address \regpair{ext3}{rs2}.  The effective address is calculated 
+to the 128-bit address \regpair{ext3}{rs2}.  The effective address is calculated 
 as follows: 
 
 \begin{equation}
@@ -779,8 +768,7 @@ Effective = addr([127-64](ext3) \cdot [63-0](rs2))
 \subsubsection{erse ext1, rs2, ext3}
 
 Store a 64-bit word using the value in \textit{ext1} as the source 
-to the 128-bit address formed by adding the values of
-128-bit address \regpair{ext3}{rs2}.  The effective address is calculated 
+to the 128-bit address \regpair{ext3}{rs2}.  The effective address is calculated 
 as follows: 
 
 \begin{equation}
