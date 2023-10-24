@@ -1,6 +1,4 @@
-\ifglsentryexists{ExtTrans}{}%
-{%
-\gls@defglossaryentry{ExtTrans}%
+\glsdefs@newdocentry{ExtTrans}%
 {%
 name={extended translation},%
 sort={extended translation},%
@@ -27,20 +25,18 @@ counter={page},%
 parent={},%
 %
 }%
-}%
-\ifglsentryexists{xBGAS}{}%
+
+\glsdefs@newdocentry{xBGAS}%
 {%
-\gls@defglossaryentry{xBGAS}%
-{%
-name={xBGAS},%
+name={\acronymfont {\glsentryshort {xBGAS}}},%
 sort={xBGAS},%
 type={main},%
-first={Extended Base Global Address Space\glsspace (xBGAS)},%
-firstplural={Extended Base Global Address Spaces\glsspace (xBGASs)},%
+first={xBGAS},%
+firstplural={xBGASs},%
 text={xBGAS},%
 plural={xBGASs},%
 description={Extended Base Global Address Space},%
-descriptionplural={Extended Base Global Address Space\acrpluralsuffix },%
+descriptionplural={Extended Base Global Address Space},%
 symbol={\relax },%
 symbolplural={\relax },%
 user1={},%
@@ -57,4 +53,4 @@ counter={page},%
 parent={},%
 %
 }%
-}%
+

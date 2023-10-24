@@ -50,7 +50,7 @@
 \chead{\textbf{xBGAS Architecture Extension Specification}}  % -- classification
 \rhead{}
 \cfoot{} %-- format: TR YYYY-RRR-V.V; y = year; r = report; v = version
-\lfoot{\textbf{xBGAS 0.0.7}}  % -- classification
+\lfoot{\textbf{xBGAS 2.0.0}}  % -- classification
 \rfoot{\thepage}      % -- page number
 
 %\usepackage{times} % Uncomment to use the Times New Roman font
@@ -80,7 +80,7 @@
 \begin{center}
 \begin{tabular}{l r}
 Date: & \today \\
-Version: & 0.0.7 \\ % Date the experiment was performed
+Version: & 2.0.0 \\ % Date the experiment was performed
 Authors: & John Leidel\\
 & David Donofrio\\
 & Farzad Fatollahi-Fard\\
@@ -88,7 +88,8 @@ Authors: & John Leidel\\
 & Brody Williams\\
 & Yong Chen\\
 & Alan Ehret\\
-& Michel Kinsy
+& Michel Kinsy\\
+& Moubarak Jeje\\
 \end{tabular}
 \end{center}
 
@@ -494,28 +495,6 @@ offset[11:5] & src & base & width & offset[4:0] & STORE \\
 \end{center}
 
 
-%-- extended 128bit load
-\subsubsection{elq rd, imm(rs1)}
-Load a 128-bit word from the address formed by adding the immediate value to the 
-128-bit address at \textit{ext1+rs1}.  Store the results in \textit{rd+extd}.  The most 
-significant 64-bits [127-64] are stored in the extended register \textit{extd}.  The least 
-significant 64-bits are stored in the base register \textit{rd}.  The effective 
-address is calculated as follows: 
-
-\begin{equation}
-Effective = addr([127-64](ext1) \cdot [63-0](rs1))+imm
-\end{equation}
-
-\begin{commentary}
-The xBGAS extension explicitly contains a definition for loading 128-bit values.  
-This is specified in order to provide support for handling fully-qualified (base 
-address + extended) xBGAS addresses in the absence of the RV128I extension.  However, 
-if the microarchitecture supports RV128I, the \textit{ELQ} instruction can be aliased 
-to the \textit{LQ} instruction.  Note that this instruction is only support in xBGAS when the base 
-instruction set is RV64I.  
-\end{commentary}
-
-
 %-- extended 64bit load
 \subsubsection{eld rd, imm(rs1)}
 Load a 64-bit word from the address formed by adding the immediate value to the 
@@ -611,28 +590,6 @@ Effective = addr(rs1)+imm
 
 \begin{commentary}
 Note that this instruction is only support in xBGAS when the base 
-instruction set is RV64I.
-\end{commentary}
-
-%-- extended 128bit store
-\subsubsection{esq rs2, imm(rs1)}
-Store a 128-bit word using the value in the register pair \textit{rs2+ext2} 
-as the source to the 128-bit address formed by adding the immediate value to 
-the 128-bit address at \textit{ext1+rs1}.  The most significant 64-bits of the source 
-are stored in the extended register at \textit{ext2} and the least significant 64-bits of the source 
-are stored in the base register at \textit{rs2}.  The effective address is calculated 
-as follows:  
-
-\begin{equation}
-Effective = addr([127-64](ext2) \cdot [63-0](rs1))+imm
-\end{equation}
-
-\begin{commentary}
-The xBGAS extension explicitly contains a definition for storing 128-bit values.  
-This is specified in order to provide support for handling fully-qualified (base 
-address + extended) xBGAS addresses in the absence of the RV128I extension.  However, 
-if the microarchitecture supports RV128I, the \textit{ESQ} instruction can be aliased 
-to the \textit{SQ} instruction.  Note that this instruction is only support in xBGAS when the base 
 instruction set is RV64I.
 \end{commentary}
 
@@ -1002,6 +959,8 @@ elb rd, imm(rs1) & rs1+ext1 & 000 & rd & 1110111\\
 \hline
 elbu rd, imm(rs1) & rs1+ext1 & 100 & rd & 1110111\\
 \hline
+ele extd, imm(rs1) & rs1 & 111 & rd & 1110111\\
+\hline
 \end{tabular}
 \end{center}
 \end{table}
@@ -1021,35 +980,7 @@ esh rs2, imm(rs1) & rs2 & rs1+ext1 & 001 & 1111011\\
 \hline
 esb rs2, imm(rs1) & rs2 & rs1+ext1 & 000 & 1111011\\
 \hline
-\end{tabular}
-\end{center}
-\end{table}
-
-\begin{table}[H]
-\caption{Extended Quad and E-Loads}
-\begin{center}
-\begin{tabular}{| c | c | c | c | c | }
-\hline
-Mnemonic & base & funct3 & dest & opcode \\ \hline
-\hline
-elq rd, imm(rs1) & rs1+ext1 & 110 & rd & 1110111\\
-\hline
-ele extd, imm(rs1) & rs1 & 111 & rd & 1110111\\
-\hline
-\end{tabular}
-\end{center}
-\end{table}
-
-\begin{table}[H]
-\caption{Extended Quad and E-Stores}
-\begin{center}
-\begin{tabular}{| c | c | c | c | c | }
-\hline
-Mnemonic & src & base & funct3 & opcode \\ \hline
-\hline
-esq rs2, imm(rs1) & rs2 & rs1+ext1 & 100 & 1111011\\
-\hline
-ese ext2, imm(rs1) & ext2 & rs1 & 101 & 1111011\\
+ese ext2, imm(rs1) & ext2 & rs1 & 111 & 1111011\\
 \hline
 \end{tabular}
 \end{center}
@@ -1083,7 +1014,7 @@ erlb rd, rs1, ext2 & 1010101 & ext2 & rs1 & 000 & rd & 0110011\\
 \hline
 erlbu rd, rs1, ext2 & 1010101 & ext2 & rs1 & 100 & rd & 0110011\\
 \hline
-erle extd, rs1, ext2 & 0100001 & ext2 & rs1 & 100 & extd & 0110011\\
+erle extd, rs1, ext2 & 1010101 & ext2 & rs1 & 111 & extd & 0110011\\
 \hline
 ersd rs1, rs2, ext3 & 0100010 &  rs2 & rs1 & 011 & ext3 & 0110011\\
 \hline
@@ -1093,7 +1024,7 @@ ersh rs1, rs2, ext3 & 0100010 &  rs2 & rs1 & 001 & ext3 & 0110011\\
 \hline
 ersb rs1, rs2, ext3 & 0100010 &  rs2 & rs1 & 000 & ext3 & 0110011\\
 \hline
-erse ext1, rs2, ext3 & 0100011 &  rs2 & ext1 & 011 & ext3 & 0110011\\
+erse ext1, rs2, ext3 & 0100010 &  rs2 & ext1 & 111 & ext3 & 0110011\\
 \hline
 \end{tabular}
 \end{center}
@@ -1117,7 +1048,7 @@ Mnemonic & base & funct3 & dest & opcode \\ \hline
 \hline
 eaddi rd, ext1, imm & ext1 & 110 & rd & 1111011\\
 \hline
-eaddie extd, rs1, imm & rs1 &111 & extd & 1111011\\
+eaddie extd, rs1, imm & rs1 & 101 & extd & 1111011\\
 \hline
 eaddix extd, ext1, imm & ext1 & 111 & extd & 0000011\\
 \hline
