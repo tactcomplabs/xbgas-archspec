@@ -1,0 +1,13 @@
+\begin{thebibliography}{1}
+
+\bibitem{RVSpec}
+Andrew Waterman and Krste Asanovic.
+\newblock {The RISC-V Instruction Set Manual, Volume I: User-Level ISA, Version 2.2}.
+\newblock Technical report, SiFive, Inc., May 2017.
+
+\bibitem{RVSuperSpec}
+Andrew Waterman and Krste Asanovic.
+\newblock {The RISC-V Instruction Set Manual, Volume II: Privileged Architecture, Version 1.10}.
+\newblock Technical report, SiFive, Inc., May 2017.
+
+\end{thebibliography}
